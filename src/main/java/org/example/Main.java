@@ -99,6 +99,7 @@ public class Main extends Application {
 
                 return;
             }
+
             // Phone number validation
             if (!phoneField.getText().matches("\\d+")) {
 
@@ -167,63 +168,97 @@ public class Main extends Application {
             Customer selectedCustomer =
                     table.getSelectionModel().getSelectedItem();
 
-            if (selectedCustomer != null) {
+            if (selectedCustomer == null) {
 
-                if (idField.getText().isEmpty()
-                        || nameField.getText().isEmpty()
-                        || emailField.getText().isEmpty()
-                        || phoneField.getText().isEmpty()) {
-                    // Email validation
-                    if (!emailField.getText().contains("@")
-                            || !emailField.getText().contains(".")) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("No Customer Selected");
+                alert.setHeaderText(null);
+                alert.setContentText(
+                        "Please select a customer to update."
+                );
+                alert.showAndWait();
 
-                        Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setTitle("Invalid Email");
-                        alert.setHeaderText(null);
-                        alert.setContentText(
-                                "Please enter a valid email address."
-                        );
-                        alert.showAndWait();
+                return;
+            }
 
-                        return;
-                    }
-                    // Phone number validation
-                    if (!phoneField.getText().matches("\\d+")) {
+            // Empty field validation
+            if (idField.getText().isEmpty()
+                    || nameField.getText().isEmpty()
+                    || emailField.getText().isEmpty()
+                    || phoneField.getText().isEmpty()) {
 
-                        Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setTitle("Invalid Phone Number");
-                        alert.setHeaderText(null);
-                        alert.setContentText(
-                                "Please enter numbers only for the phone number."
-                        );
-                        alert.showAndWait();
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Missing Information");
+                alert.setHeaderText(null);
+                alert.setContentText(
+                        "Please fill in all customer details."
+                );
+                alert.showAndWait();
 
-                        return;
-                    }
+                return;
+            }
+
+            // Email validation
+            if (!emailField.getText().contains("@")
+                    || !emailField.getText().contains(".")) {
+
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Invalid Email");
+                alert.setHeaderText(null);
+                alert.setContentText(
+                        "Please enter a valid email address."
+                );
+                alert.showAndWait();
+
+                return;
+            }
+
+            // Phone number validation
+            if (!phoneField.getText().matches("\\d+")) {
+
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Invalid Phone Number");
+                alert.setHeaderText(null);
+                alert.setContentText(
+                        "Please enter numbers only for the phone number."
+                );
+                alert.showAndWait();
+
+                return;
+            }
+
+            // Duplicate Customer ID validation during update
+            for (Customer existingCustomer : table.getItems()) {
+
+                if (existingCustomer != selectedCustomer
+                        && existingCustomer.getId()
+                        .equals(idField.getText())) {
 
                     Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Missing Information");
+                    alert.setTitle("Duplicate Customer ID");
                     alert.setHeaderText(null);
                     alert.setContentText(
-                            "Please fill in all customer details."
+                            "A customer with this ID already exists."
                     );
                     alert.showAndWait();
 
                     return;
                 }
-
-                selectedCustomer.setId(idField.getText());
-                selectedCustomer.setName(nameField.getText());
-                selectedCustomer.setEmail(emailField.getText());
-                selectedCustomer.setPhone(phoneField.getText());
-
-                table.refresh();
-
-                idField.clear();
-                nameField.clear();
-                emailField.clear();
-                phoneField.clear();
             }
+
+            selectedCustomer.setId(idField.getText());
+            selectedCustomer.setName(nameField.getText());
+            selectedCustomer.setEmail(emailField.getText());
+            selectedCustomer.setPhone(phoneField.getText());
+
+            table.refresh();
+
+            idField.clear();
+            nameField.clear();
+            emailField.clear();
+            phoneField.clear();
+
+            table.getSelectionModel().clearSelection();
         });
 
         // Delete Customer
