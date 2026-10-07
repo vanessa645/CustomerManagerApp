@@ -99,6 +99,19 @@ public class Main extends Application {
 
                 return;
             }
+            // Phone number validation
+            if (!phoneField.getText().matches("\\d+")) {
+
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Invalid Phone Number");
+                alert.setHeaderText(null);
+                alert.setContentText(
+                        "Please enter numbers only for the phone number."
+                );
+                alert.showAndWait();
+
+                return;
+            }
 
             // Duplicate Customer ID validation
             for (Customer existingCustomer : table.getItems()) {
