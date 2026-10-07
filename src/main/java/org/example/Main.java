@@ -85,15 +85,26 @@ public class Main extends Application {
                 return;
             }
 
-            Customer customer = new Customer(
-                    idField.getText(),
-                    nameField.getText(),
-                    emailField.getText(),
-                    phoneField.getText()
-            );
+            // Email validation
+            if (!emailField.getText().contains("@")
+                    || !emailField.getText().contains(".")) {
+
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Invalid Email");
+                alert.setHeaderText(null);
+                alert.setContentText(
+                        "Please enter a valid email address."
+                );
+                alert.showAndWait();
+
+                return;
+            }
+
+            // Duplicate Customer ID validation
             for (Customer existingCustomer : table.getItems()) {
 
-                if (existingCustomer.getId().equals(idField.getText())) {
+                if (existingCustomer.getId()
+                        .equals(idField.getText())) {
 
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Duplicate Customer ID");
@@ -106,6 +117,13 @@ public class Main extends Application {
                     return;
                 }
             }
+
+            Customer customer = new Customer(
+                    idField.getText(),
+                    nameField.getText(),
+                    emailField.getText(),
+                    phoneField.getText()
+            );
 
             table.getItems().add(customer);
 
@@ -176,7 +194,9 @@ public class Main extends Application {
 
             if (selectedCustomer != null) {
 
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                Alert alert =
+                        new Alert(Alert.AlertType.CONFIRMATION);
+
                 alert.setTitle("Delete Customer");
                 alert.setHeaderText(null);
                 alert.setContentText(
@@ -209,7 +229,7 @@ public class Main extends Application {
             table.getSelectionModel().clearSelection();
         });
 
-        // Layout
+        // Button layout
         HBox buttonBox = new HBox(10);
 
         buttonBox.getChildren().addAll(
@@ -218,6 +238,8 @@ public class Main extends Application {
                 deleteButton,
                 clearButton
         );
+
+        // Main layout
         VBox layout = new VBox(10);
 
         layout.getChildren().addAll(
