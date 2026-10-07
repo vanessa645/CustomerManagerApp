@@ -28,6 +28,39 @@ public class Main extends Application {
 
         Button addButton = new Button("Add Customer");
 
+        TableView<Customer> table = new TableView<>();
+
+        TableColumn<Customer, String> idColumn =
+                new TableColumn<>("Customer ID");
+        idColumn.setCellValueFactory(
+                new PropertyValueFactory<>("id")
+        );
+
+        TableColumn<Customer, String> nameColumn =
+                new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(
+                new PropertyValueFactory<>("name")
+        );
+
+        TableColumn<Customer, String> emailColumn =
+                new TableColumn<>("Email");
+        emailColumn.setCellValueFactory(
+                new PropertyValueFactory<>("email")
+        );
+
+        TableColumn<Customer, String> phoneColumn =
+                new TableColumn<>("Phone");
+        phoneColumn.setCellValueFactory(
+                new PropertyValueFactory<>("phone")
+        );
+
+        table.getColumns().addAll(
+                idColumn,
+                nameColumn,
+                emailColumn,
+                phoneColumn
+        );
+
         VBox layout = new VBox(10);
 
         layout.getChildren().addAll(
@@ -40,30 +73,11 @@ public class Main extends Application {
                 emailField,
                 phoneLabel,
                 phoneField,
-                addButton
-                TableView<Customer> table = new TableView<>();
-
-        TableColumn<Customer, String> idColumn = new TableColumn<>("Customer ID");
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-        TableColumn<Customer, String> nameColumn = new TableColumn<>("Name");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-        TableColumn<Customer, String> emailColumn = new TableColumn<>("Email");
-        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-
-        TableColumn<Customer, String> phoneColumn = new TableColumn<>("Phone");
-        phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
-
-        table.getColumns().addAll(
-                idColumn,
-                nameColumn,
-                emailColumn,
-                phoneColumn
-        );
+                addButton,
+                table
         );
 
-        Scene scene = new Scene(layout, 400, 300);
+        Scene scene = new Scene(layout, 600, 500);
 
         stage.setTitle("Customer Manager");
         stage.setScene(scene);
