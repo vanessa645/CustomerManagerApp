@@ -26,8 +26,10 @@ public class Main extends Application {
         Label phoneLabel = new Label("Phone Number:");
         TextField phoneField = new TextField();
 
+
         Button addButton = new Button("Add Customer");
         Button updateButton = new Button("Update Customer");
+        Button deleteButton = new Button("Delete Customer");
 
         TableView<Customer> table = new TableView<>();
 
@@ -116,6 +118,20 @@ public class Main extends Application {
                 phoneField.clear();
             }
         });
+        deleteButton.setOnAction(e -> {
+
+            Customer selectedCustomer =
+                    table.getSelectionModel().getSelectedItem();
+
+            if (selectedCustomer != null) {
+                table.getItems().remove(selectedCustomer);
+
+                idField.clear();
+                nameField.clear();
+                emailField.clear();
+                phoneField.clear();
+            }
+        });
 
         VBox layout = new VBox(10);
 
@@ -131,6 +147,7 @@ public class Main extends Application {
                 phoneField,
                 addButton,
                 updateButton,
+                deleteButton,
                 table
         );
 
