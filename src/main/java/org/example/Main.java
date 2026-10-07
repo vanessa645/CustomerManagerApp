@@ -27,6 +27,7 @@ public class Main extends Application {
         TextField phoneField = new TextField();
 
         Button addButton = new Button("Add Customer");
+        Button updateButton = new Button("Update Customer");
 
         TableView<Customer> table = new TableView<>();
 
@@ -90,6 +91,7 @@ public class Main extends Application {
                 phoneLabel,
                 phoneField,
                 addButton,
+                updateButton,
                 table
         );
 
