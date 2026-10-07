@@ -105,10 +105,32 @@ public class Main extends Application {
                     table.getSelectionModel().getSelectedItem();
 
             if (selectedCustomer != null) {
-                idField.setText(selectedCustomer.getId());
-                nameField.setText(selectedCustomer.getName());
-                emailField.setText(selectedCustomer.getEmail());
-                phoneField.setText(selectedCustomer.getPhone());
+
+                if (idField.getText().isEmpty()
+                        || nameField.getText().isEmpty()
+                        || emailField.getText().isEmpty()
+                        || phoneField.getText().isEmpty()) {
+
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Missing Information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Please fill in all customer details.");
+                    alert.showAndWait();
+
+                    return;
+                }
+
+                selectedCustomer.setId(idField.getText());
+                selectedCustomer.setName(nameField.getText());
+                selectedCustomer.setEmail(emailField.getText());
+                selectedCustomer.setPhone(phoneField.getText());
+
+                table.refresh();
+
+                idField.clear();
+                nameField.clear();
+                emailField.clear();
+                phoneField.clear();
             }
         });
 
