@@ -30,6 +30,22 @@ public class Main extends Application {
 
         TableView<Customer> table = new TableView<>();
 
+        addButton.setOnAction(e -> {
+            Customer customer = new Customer(
+                    idField.getText(),
+                    nameField.getText(),
+                    emailField.getText(),
+                    phoneField.getText()
+            );
+
+            table.getItems().add(customer);
+
+            idField.clear();
+            nameField.clear();
+            emailField.clear();
+            phoneField.clear();
+        });
+
         TableColumn<Customer, String> idColumn =
                 new TableColumn<>("Customer ID");
         idColumn.setCellValueFactory(
