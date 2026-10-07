@@ -26,7 +26,6 @@ public class Main extends Application {
         Label phoneLabel = new Label("Phone Number:");
         TextField phoneField = new TextField();
 
-
         Button addButton = new Button("Add Customer");
         Button updateButton = new Button("Update Customer");
         Button deleteButton = new Button("Delete Customer");
@@ -77,7 +76,9 @@ public class Main extends Application {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Missing Information");
                 alert.setHeaderText(null);
-                alert.setContentText("Please fill in all customer details.");
+                alert.setContentText(
+                        "Please fill in all customer details."
+                );
                 alert.showAndWait();
 
                 return;
@@ -106,6 +107,21 @@ public class Main extends Application {
 
             if (selectedCustomer != null) {
 
+                idField.setText(selectedCustomer.getId());
+                nameField.setText(selectedCustomer.getName());
+                emailField.setText(selectedCustomer.getEmail());
+                phoneField.setText(selectedCustomer.getPhone());
+            }
+        });
+
+        // Update Customer
+        updateButton.setOnAction(e -> {
+
+            Customer selectedCustomer =
+                    table.getSelectionModel().getSelectedItem();
+
+            if (selectedCustomer != null) {
+
                 if (idField.getText().isEmpty()
                         || nameField.getText().isEmpty()
                         || emailField.getText().isEmpty()
@@ -114,7 +130,9 @@ public class Main extends Application {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Missing Information");
                     alert.setHeaderText(null);
-                    alert.setContentText("Please fill in all customer details.");
+                    alert.setContentText(
+                            "Please fill in all customer details."
+                    );
                     alert.showAndWait();
 
                     return;
@@ -134,41 +152,37 @@ public class Main extends Application {
             }
         });
 
-        // Update Customer
-        updateButton.setOnAction(e -> {
-
-            Customer selectedCustomer =
-                    table.getSelectionModel().getSelectedItem();
-
-            if (selectedCustomer != null) {
-
-                selectedCustomer.setId(idField.getText());
-                selectedCustomer.setName(nameField.getText());
-                selectedCustomer.setEmail(emailField.getText());
-                selectedCustomer.setPhone(phoneField.getText());
-
-                table.refresh();
-
-                idField.clear();
-                nameField.clear();
-                emailField.clear();
-                phoneField.clear();
-            }
-        });
+        // Delete Customer
         deleteButton.setOnAction(e -> {
 
             Customer selectedCustomer =
                     table.getSelectionModel().getSelectedItem();
 
             if (selectedCustomer != null) {
-                table.getItems().remove(selectedCustomer);
 
-                idField.clear();
-                nameField.clear();
-                emailField.clear();
-                phoneField.clear();
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Delete Customer");
+                alert.setHeaderText(null);
+                alert.setContentText(
+                        "Are you sure you want to delete this customer?"
+                );
+
+                ButtonType result =
+                        alert.showAndWait().orElse(ButtonType.NO);
+
+                if (result == ButtonType.OK) {
+
+                    table.getItems().remove(selectedCustomer);
+
+                    idField.clear();
+                    nameField.clear();
+                    emailField.clear();
+                    phoneField.clear();
+                }
             }
         });
+
+        // Clear Form
         clearButton.setOnAction(e -> {
 
             idField.clear();
@@ -179,6 +193,7 @@ public class Main extends Application {
             table.getSelectionModel().clearSelection();
         });
 
+        // Layout
         VBox layout = new VBox(10);
 
         layout.getChildren().addAll(
