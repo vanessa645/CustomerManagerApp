@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -194,6 +195,14 @@ public class Main extends Application {
         });
 
         // Layout
+        HBox buttonBox = new HBox(10);
+
+        buttonBox.getChildren().addAll(
+                addButton,
+                updateButton,
+                deleteButton,
+                clearButton
+        );
         VBox layout = new VBox(10);
 
         layout.getChildren().addAll(
@@ -206,10 +215,7 @@ public class Main extends Application {
                 emailField,
                 phoneLabel,
                 phoneField,
-                addButton,
-                updateButton,
-                deleteButton,
-                clearButton,
+                buttonBox,
                 table
         );
 
