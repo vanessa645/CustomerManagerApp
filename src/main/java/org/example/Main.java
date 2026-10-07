@@ -173,6 +173,33 @@ public class Main extends Application {
                         || nameField.getText().isEmpty()
                         || emailField.getText().isEmpty()
                         || phoneField.getText().isEmpty()) {
+                    // Email validation
+                    if (!emailField.getText().contains("@")
+                            || !emailField.getText().contains(".")) {
+
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Invalid Email");
+                        alert.setHeaderText(null);
+                        alert.setContentText(
+                                "Please enter a valid email address."
+                        );
+                        alert.showAndWait();
+
+                        return;
+                    }
+                    // Phone number validation
+                    if (!phoneField.getText().matches("\\d+")) {
+
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Invalid Phone Number");
+                        alert.setHeaderText(null);
+                        alert.setContentText(
+                                "Please enter numbers only for the phone number."
+                        );
+                        alert.showAndWait();
+
+                        return;
+                    }
 
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Missing Information");
