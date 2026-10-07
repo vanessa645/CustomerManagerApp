@@ -91,6 +91,21 @@ public class Main extends Application {
                     emailField.getText(),
                     phoneField.getText()
             );
+            for (Customer existingCustomer : table.getItems()) {
+
+                if (existingCustomer.getId().equals(idField.getText())) {
+
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Duplicate Customer ID");
+                    alert.setHeaderText(null);
+                    alert.setContentText(
+                            "A customer with this ID already exists."
+                    );
+                    alert.showAndWait();
+
+                    return;
+                }
+            }
 
             table.getItems().add(customer);
 
