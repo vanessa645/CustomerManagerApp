@@ -30,6 +30,7 @@ public class Main extends Application {
         Button addButton = new Button("Add Customer");
         Button updateButton = new Button("Update Customer");
         Button deleteButton = new Button("Delete Customer");
+        Button clearButton = new Button("Clear");
 
         TableView<Customer> table = new TableView<>();
 
@@ -132,6 +133,15 @@ public class Main extends Application {
                 phoneField.clear();
             }
         });
+        clearButton.setOnAction(e -> {
+
+            idField.clear();
+            nameField.clear();
+            emailField.clear();
+            phoneField.clear();
+
+            table.getSelectionModel().clearSelection();
+        });
 
         VBox layout = new VBox(10);
 
@@ -148,6 +158,7 @@ public class Main extends Application {
                 addButton,
                 updateButton,
                 deleteButton,
+                clearButton,
                 table
         );
 
