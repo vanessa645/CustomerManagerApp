@@ -1,6 +1,8 @@
 package org.example;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -27,43 +29,86 @@ public class Main extends Application {
         Label phoneLabel = new Label("Phone Number:");
         TextField phoneField = new TextField();
 
+        // Province
+        Label provinceLabel = new Label("Province:");
+
+        ComboBox<String> provinceBox = new ComboBox<>();
+
+        provinceBox.getItems().addAll(
+                "Central",
+                "Copperbelt",
+                "Eastern",
+                "Luapula",
+                "Lusaka",
+                "Muchinga",
+                "Northern",
+                "North-Western",
+                "Southern",
+                "Western"
+        );
+
+        provinceBox.setPromptText("Select Province");
+
         Button addButton = new Button("Add Customer");
         Button updateButton = new Button("Update Customer");
         Button deleteButton = new Button("Delete Customer");
         Button clearButton = new Button("Clear");
 
+        // ObservableList of customers
+        ObservableList<Customer> customers =
+                FXCollections.observableArrayList();
+
+        // Table
         TableView<Customer> table = new TableView<>();
 
-        // Table columns
+        table.setItems(customers);
+
+        // Customer ID column
         TableColumn<Customer, String> idColumn =
                 new TableColumn<>("Customer ID");
+
         idColumn.setCellValueFactory(
                 new PropertyValueFactory<>("id")
         );
 
+        // Name column
         TableColumn<Customer, String> nameColumn =
                 new TableColumn<>("Name");
+
         nameColumn.setCellValueFactory(
                 new PropertyValueFactory<>("name")
         );
 
+        // Email column
         TableColumn<Customer, String> emailColumn =
                 new TableColumn<>("Email");
+
         emailColumn.setCellValueFactory(
                 new PropertyValueFactory<>("email")
         );
 
+        // Phone column
         TableColumn<Customer, String> phoneColumn =
                 new TableColumn<>("Phone");
+
         phoneColumn.setCellValueFactory(
                 new PropertyValueFactory<>("phone")
+        );
+
+        // Province column
+        TableColumn<Customer, String> provinceColumn =
+                new TableColumn<>("Province");
+
+        provinceColumn.setCellValueFactory(
+                new PropertyValueFactory<>("province")
         );
 
         table.getColumns().addAll(
                 idColumn,
                 nameColumn,
                 emailColumn,
-                phoneColumn
+                phoneColumn,
+                provinceColumn
         );
 
         // Add Customer
@@ -72,15 +117,13 @@ public class Main extends Application {
             if (idField.getText().isEmpty()
                     || nameField.getText().isEmpty()
                     || emailField.getText().isEmpty()
-                    || phoneField.getText().isEmpty()) {
+                    || phoneField.getText().isEmpty()
+                    || provinceBox.getValue() == null) {
 
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Missing Information");
-                alert.setHeaderText(null);
-                alert.setContentText(
-                        "Please fill in all customer details."
+                showWarning(
+                        "Missing Information",
+                        "Please fill in all customer details and select a province."
                 );
-                alert.showAndWait();
 
                 return;
             }
@@ -89,44 +132,35 @@ public class Main extends Application {
             if (!emailField.getText().contains("@")
                     || !emailField.getText().contains(".")) {
 
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Invalid Email");
-                alert.setHeaderText(null);
-                alert.setContentText(
+                showWarning(
+                        "Invalid Email",
                         "Please enter a valid email address."
                 );
-                alert.showAndWait();
 
                 return;
             }
 
-            // Phone number validation
+            // Phone validation
             if (!phoneField.getText().matches("\\d+")) {
 
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Invalid Phone Number");
-                alert.setHeaderText(null);
-                alert.setContentText(
+                showWarning(
+                        "Invalid Phone Number",
                         "Please enter numbers only for the phone number."
                 );
-                alert.showAndWait();
 
                 return;
             }
 
-            // Duplicate Customer ID validation
-            for (Customer existingCustomer : table.getItems()) {
+            // Duplicate ID validation
+            for (Customer existingCustomer : customers) {
 
                 if (existingCustomer.getId()
                         .equals(idField.getText())) {
 
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Duplicate Customer ID");
-                    alert.setHeaderText(null);
-                    alert.setContentText(
+                    showWarning(
+                            "Duplicate Customer ID",
                             "A customer with this ID already exists."
                     );
-                    alert.showAndWait();
 
                     return;
                 }
@@ -136,18 +170,22 @@ public class Main extends Application {
                     idField.getText(),
                     nameField.getText(),
                     emailField.getText(),
-                    phoneField.getText()
+                    phoneField.getText(),
+                    provinceBox.getValue()
             );
 
-            table.getItems().add(customer);
+            customers.add(customer);
 
-            idField.clear();
-            nameField.clear();
-            emailField.clear();
-            phoneField.clear();
+            clearForm(
+                    idField,
+                    nameField,
+                    emailField,
+                    phoneField,
+                    provinceBox
+            );
         });
 
-        // Select a customer from the table
+        // Select customer
         table.setOnMouseClicked(event -> {
 
             Customer selectedCustomer =
@@ -159,6 +197,10 @@ public class Main extends Application {
                 nameField.setText(selectedCustomer.getName());
                 emailField.setText(selectedCustomer.getEmail());
                 phoneField.setText(selectedCustomer.getPhone());
+
+                provinceBox.setValue(
+                        selectedCustomer.getProvince()
+                );
             }
         });
 
@@ -170,13 +212,10 @@ public class Main extends Application {
 
             if (selectedCustomer == null) {
 
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("No Customer Selected");
-                alert.setHeaderText(null);
-                alert.setContentText(
+                showWarning(
+                        "No Customer Selected",
                         "Please select a customer to update."
                 );
-                alert.showAndWait();
 
                 return;
             }
@@ -185,15 +224,13 @@ public class Main extends Application {
             if (idField.getText().isEmpty()
                     || nameField.getText().isEmpty()
                     || emailField.getText().isEmpty()
-                    || phoneField.getText().isEmpty()) {
+                    || phoneField.getText().isEmpty()
+                    || provinceBox.getValue() == null) {
 
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Missing Information");
-                alert.setHeaderText(null);
-                alert.setContentText(
-                        "Please fill in all customer details."
+                showWarning(
+                        "Missing Information",
+                        "Please fill in all customer details and select a province."
                 );
-                alert.showAndWait();
 
                 return;
             }
@@ -202,45 +239,36 @@ public class Main extends Application {
             if (!emailField.getText().contains("@")
                     || !emailField.getText().contains(".")) {
 
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Invalid Email");
-                alert.setHeaderText(null);
-                alert.setContentText(
+                showWarning(
+                        "Invalid Email",
                         "Please enter a valid email address."
                 );
-                alert.showAndWait();
 
                 return;
             }
 
-            // Phone number validation
+            // Phone validation
             if (!phoneField.getText().matches("\\d+")) {
 
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Invalid Phone Number");
-                alert.setHeaderText(null);
-                alert.setContentText(
+                showWarning(
+                        "Invalid Phone Number",
                         "Please enter numbers only for the phone number."
                 );
-                alert.showAndWait();
 
                 return;
             }
 
-            // Duplicate Customer ID validation during update
-            for (Customer existingCustomer : table.getItems()) {
+            // Duplicate ID validation
+            for (Customer existingCustomer : customers) {
 
                 if (existingCustomer != selectedCustomer
                         && existingCustomer.getId()
                         .equals(idField.getText())) {
 
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Duplicate Customer ID");
-                    alert.setHeaderText(null);
-                    alert.setContentText(
+                    showWarning(
+                            "Duplicate Customer ID",
                             "A customer with this ID already exists."
                     );
-                    alert.showAndWait();
 
                     return;
                 }
@@ -250,13 +278,19 @@ public class Main extends Application {
             selectedCustomer.setName(nameField.getText());
             selectedCustomer.setEmail(emailField.getText());
             selectedCustomer.setPhone(phoneField.getText());
+            selectedCustomer.setProvince(
+                    provinceBox.getValue()
+            );
 
             table.refresh();
 
-            idField.clear();
-            nameField.clear();
-            emailField.clear();
-            phoneField.clear();
+            clearForm(
+                    idField,
+                    nameField,
+                    emailField,
+                    phoneField,
+                    provinceBox
+            );
 
             table.getSelectionModel().clearSelection();
         });
@@ -267,44 +301,57 @@ public class Main extends Application {
             Customer selectedCustomer =
                     table.getSelectionModel().getSelectedItem();
 
-            if (selectedCustomer != null) {
+            if (selectedCustomer == null) {
 
-                Alert alert =
-                        new Alert(Alert.AlertType.CONFIRMATION);
-
-                alert.setTitle("Delete Customer");
-                alert.setHeaderText(null);
-                alert.setContentText(
-                        "Are you sure you want to delete this customer?"
+                showWarning(
+                        "No Customer Selected",
+                        "Please select a customer to delete."
                 );
 
-                ButtonType result =
-                        alert.showAndWait().orElse(ButtonType.NO);
+                return;
+            }
 
-                if (result == ButtonType.OK) {
+            Alert alert =
+                    new Alert(Alert.AlertType.CONFIRMATION);
 
-                    table.getItems().remove(selectedCustomer);
+            alert.setTitle("Delete Customer");
+            alert.setHeaderText(null);
+            alert.setContentText(
+                    "Are you sure you want to delete this customer?"
+            );
 
-                    idField.clear();
-                    nameField.clear();
-                    emailField.clear();
-                    phoneField.clear();
-                }
+            ButtonType result =
+                    alert.showAndWait().orElse(ButtonType.NO);
+
+            if (result == ButtonType.OK) {
+
+                customers.remove(selectedCustomer);
+
+                clearForm(
+                        idField,
+                        nameField,
+                        emailField,
+                        phoneField,
+                        provinceBox
+                );
             }
         });
 
         // Clear Form
         clearButton.setOnAction(e -> {
 
-            idField.clear();
-            nameField.clear();
-            emailField.clear();
-            phoneField.clear();
+            clearForm(
+                    idField,
+                    nameField,
+                    emailField,
+                    phoneField,
+                    provinceBox
+            );
 
             table.getSelectionModel().clearSelection();
         });
 
-        // Button layout
+        // Buttons
         HBox buttonBox = new HBox(10);
 
         buttonBox.getChildren().addAll(
@@ -327,15 +374,44 @@ public class Main extends Application {
                 emailField,
                 phoneLabel,
                 phoneField,
+                provinceLabel,
+                provinceBox,
                 buttonBox,
                 table
         );
 
-        Scene scene = new Scene(layout, 600, 500);
+        Scene scene = new Scene(layout, 750, 650);
 
         stage.setTitle("Customer Manager");
         stage.setScene(scene);
         stage.show();
+    }
+
+    // Warning helper method
+    private void showWarning(String title, String message) {
+
+        Alert alert =
+                new Alert(Alert.AlertType.WARNING);
+
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    // Clear form helper method
+    private void clearForm(
+            TextField idField,
+            TextField nameField,
+            TextField emailField,
+            TextField phoneField,
+            ComboBox<String> provinceBox) {
+
+        idField.clear();
+        nameField.clear();
+        emailField.clear();
+        phoneField.clear();
+        provinceBox.setValue(null);
     }
 
     public static void main(String[] args) {

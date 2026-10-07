@@ -6,12 +6,16 @@ public class Customer {
     private String name;
     private String email;
     private String phone;
+    private String province;
 
-    public Customer(String id, String name, String email, String phone) {
+    public Customer(String id, String name, String email,
+                    String phone, String province) {
+
         this.id = id;
         this.name = name;
         this.email = email;
         this.phone = phone;
+        this.province = province;
     }
 
     public String getId() {
@@ -44,5 +48,13 @@ public class Customer {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 }
