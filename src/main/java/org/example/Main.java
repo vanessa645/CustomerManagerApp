@@ -69,6 +69,20 @@ public class Main extends Application {
         // Add Customer
         addButton.setOnAction(e -> {
 
+            if (idField.getText().isEmpty()
+                    || nameField.getText().isEmpty()
+                    || emailField.getText().isEmpty()
+                    || phoneField.getText().isEmpty()) {
+
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Missing Information");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill in all customer details.");
+                alert.showAndWait();
+
+                return;
+            }
+
             Customer customer = new Customer(
                     idField.getText(),
                     nameField.getText(),
