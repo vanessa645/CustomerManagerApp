@@ -31,22 +31,7 @@ public class Main extends Application {
 
         TableView<Customer> table = new TableView<>();
 
-        addButton.setOnAction(e -> {
-            Customer customer = new Customer(
-                    idField.getText(),
-                    nameField.getText(),
-                    emailField.getText(),
-                    phoneField.getText()
-            );
-
-            table.getItems().add(customer);
-
-            idField.clear();
-            nameField.clear();
-            emailField.clear();
-            phoneField.clear();
-        });
-
+        // Table columns
         TableColumn<Customer, String> idColumn =
                 new TableColumn<>("Customer ID");
         idColumn.setCellValueFactory(
@@ -77,6 +62,60 @@ public class Main extends Application {
                 emailColumn,
                 phoneColumn
         );
+
+        // Add Customer
+        addButton.setOnAction(e -> {
+
+            Customer customer = new Customer(
+                    idField.getText(),
+                    nameField.getText(),
+                    emailField.getText(),
+                    phoneField.getText()
+            );
+
+            table.getItems().add(customer);
+
+            idField.clear();
+            nameField.clear();
+            emailField.clear();
+            phoneField.clear();
+        });
+
+        // Select a customer from the table
+        table.setOnMouseClicked(event -> {
+
+            Customer selectedCustomer =
+                    table.getSelectionModel().getSelectedItem();
+
+            if (selectedCustomer != null) {
+                idField.setText(selectedCustomer.getId());
+                nameField.setText(selectedCustomer.getName());
+                emailField.setText(selectedCustomer.getEmail());
+                phoneField.setText(selectedCustomer.getPhone());
+            }
+        });
+
+        // Update Customer
+        updateButton.setOnAction(e -> {
+
+            Customer selectedCustomer =
+                    table.getSelectionModel().getSelectedItem();
+
+            if (selectedCustomer != null) {
+
+                selectedCustomer.setId(idField.getText());
+                selectedCustomer.setName(nameField.getText());
+                selectedCustomer.setEmail(emailField.getText());
+                selectedCustomer.setPhone(phoneField.getText());
+
+                table.refresh();
+
+                idField.clear();
+                nameField.clear();
+                emailField.clear();
+                phoneField.clear();
+            }
+        });
 
         VBox layout = new VBox(10);
 
